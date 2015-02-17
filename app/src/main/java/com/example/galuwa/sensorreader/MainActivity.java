@@ -70,7 +70,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 
             long curTime = System.currentTimeMillis();
 
-            if ((curTime - lastUpdate) > 100) {
+            if ((curTime - lastUpdate) > 600) {
                 long diffTime = (curTime - lastUpdate);
                 lastUpdate = curTime;
 
@@ -83,6 +83,10 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
                 last_x = x;
                 last_y = y;
                 last_z = z;
+
+                //Assuming Laying flat
+                //last_z -= 9.81;
+
             }
             System.out.println(last_x);
 
