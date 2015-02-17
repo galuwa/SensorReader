@@ -23,7 +23,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
     private SensorManager senSensorManager;
     private Sensor senAccelerometer;
 
-    int balon;   // THIS IS DUMMY: KILL IT
+    String Change2 = "im starting to hate myself.git";
 
     long lastUpdate = 0;
     float last_x = 0;
