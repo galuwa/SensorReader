@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.content.Intent;
 
 import java.text.DecimalFormat;
 
@@ -60,8 +61,10 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+
             return true;
         }
+
 
         return super.onOptionsItemSelected(item);
     }
@@ -78,6 +81,12 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
             view.setText("Start");
 
 
+    }
+
+    public void openLog(View v){
+
+        Intent intent = new Intent(this, LogActvitiy.class);
+        startActivity(intent);
     }
 
 
