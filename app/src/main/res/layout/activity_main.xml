@@ -9,29 +9,51 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Large Text"
+        android:text="X-Axis"
         android:id="@+id/textboxthing"
-        android:layout_marginTop="116dp"
+        android:layout_marginTop="60dp"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignStart="@+id/textboxthing2" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Large Text"
+        android:text="Y-Axis"
         android:id="@+id/textboxthing2"
+        android:layout_marginTop="40dp"
         android:layout_below="@+id/textboxthing"
-        android:layout_alignStart="@+id/textboxthing3"
-        android:layout_marginTop="102dp" />
+        android:layout_alignStart="@+id/textboxthing3" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Large Text"
+        android:text="Z-Axis"
         android:id="@+id/textboxthing3"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/textboxthing2"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="124dp" />
+        android:layout_marginTop="42dp" />
+
+   <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start"
+        android:id="@+id/button"
+        android:layout_below="@+id/textboxthing3"
+        android:layout_centerHorizontal="true"
+        android:onClick="buttonPress"
+        android:layout_marginTop="71dp" />
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar"
+        android:layout_marginTop="43dp"
+        android:layout_below="@+id/progressBar"
+        android:layout_centerHorizontal="true"
+        android:max="100"
+        android:indeterminate="false" />
+
 </RelativeLayout>

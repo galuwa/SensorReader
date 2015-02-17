@@ -9,6 +9,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.text.DecimalFormat;
@@ -22,10 +24,15 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
     private SensorManager senSensorManager;
     private Sensor senAccelerometer;
 
+
     long lastUpdate = 0;
     float last_x = 0;
     float last_y = 0;
     float last_z = 0;
+
+    float previousX = 0;
+    float previousY = 0;
+    float previousZ = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +67,20 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
     }
 
 
+    public void buttonPress(View v) {
+
+        TextView view = (TextView) findViewById(R.id.button);
+
+        if(view.getText().toString().equals("Start"))
+            view.setText("Stop");
+
+        else if(view.getText().toString().equals("Stop"))
+            view.setText("Start");
+
+
+    }
+
+
     public void onSensorChanged(SensorEvent sensorEvent) {
         Sensor mySensor = sensorEvent.sensor;
 
@@ -70,7 +91,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 
             long curTime = System.currentTimeMillis();
 
-            if ((curTime - lastUpdate) > 600) {
+            if ((curTime - lastUpdate) > 100) {
                 long diffTime = (curTime - lastUpdate);
                 lastUpdate = curTime;
 
@@ -80,26 +101,51 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 
                 }
 
-                last_x = x;
-                last_y = y;
-                last_z = z;
 
-                //Assuming Laying flat
-                //last_z -= 9.81;
+                previousX = last_x;
+                previousY = last_y;
+                previousZ = last_z;
+
+                if(Math.abs(x - previousX) > .3){
+
+                    last_x = x;
+
+                }
+
+                if(Math.abs(y - previousY) > .3){
+
+                    last_y = y;
+
+                }
+
+                if(Math.abs(z - previousZ) > .3){
+
+                    last_z = z;
+
+                }
+
+
 
             }
-            System.out.println(last_x);
+
 
             DecimalFormat df = new DecimalFormat("#.##");
 
-            TextView view = (TextView) findViewById(R.id.textboxthing);
-            view.setText("X is: " + df.format(last_x) + "");
+            TextView buttonValue = (TextView) findViewById(R.id.button);
 
-            TextView view2 = (TextView) findViewById(R.id.textboxthing2);
-            view2.setText("Y is: " + df.format(last_y) + "");
 
-            TextView view3 = (TextView) findViewById(R.id.textboxthing3);
-            view3.setText("Z is: " + df.format(last_z) + "");
+            if(buttonValue.getText().toString().equals("Stop")) {
+
+                TextView view = (TextView) findViewById(R.id.textboxthing);
+                view.setText("X Axis: " + df.format(last_x) + "");
+
+                TextView view2 = (TextView) findViewById(R.id.textboxthing2);
+                view2.setText("Y Axis: " + df.format(last_y) + "");
+
+                TextView view3 = (TextView) findViewById(R.id.textboxthing3);
+                view3.setText("Z Axis: " + df.format(last_z) + "");
+
+            }
         }
 
 
