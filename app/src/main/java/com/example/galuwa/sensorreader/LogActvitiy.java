@@ -4,6 +4,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 
 public class LogActvitiy extends ActionBarActivity {
@@ -12,6 +13,14 @@ public class LogActvitiy extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_actvitiy);
+
+        populateLog();
+    }
+
+    public void populateLog(){
+
+        TextView view = (TextView) findViewById(R.id.text);
+
     }
 
 
@@ -19,6 +28,9 @@ public class LogActvitiy extends ActionBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_log_actvitiy, menu);
+
+
+
         return true;
     }
 

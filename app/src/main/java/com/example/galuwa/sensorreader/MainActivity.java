@@ -14,11 +14,17 @@ import android.widget.TextView;
 import android.content.Intent;
 
 import java.text.DecimalFormat;
+import java.util.LinkedList;
+import java.util.Queue;
 
 
 public class MainActivity extends ActionBarActivity implements SensorEventListener {
 
-    public final static String EXTRA_MESSAGE = "com.example.frank.myfirstapplication.MESSAGE";
+
+
+    public GenQueue<Float> SuperQueue;
+
+    public final static String EXTRA_MESSAGE = "";
     public final static int SHAKE_THRESHOLD = 1000;
 
     private SensorManager senSensorManager;
@@ -35,6 +41,11 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
     float previousY = 0;
     float previousZ = 0;
 
+    //This is test stuff for the Queue
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +53,8 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         senSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         senSensorManager.registerListener(this,senAccelerometer,SensorManager.SENSOR_DELAY_NORMAL);
+
+
     }
 
 
@@ -72,19 +85,33 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 
     public void buttonPress(View v) {
 
+
+
         TextView view = (TextView) findViewById(R.id.button);
 
-        if(view.getText().toString().equals("Start"))
+        if(view.getText().toString().equals("Start")) {
             view.setText("Stop");
+            SuperQueue = new GenQueue<Float>();
+        }
 
         else if(view.getText().toString().equals("Stop"))
             view.setText("Start");
+
+
 
 
     }
 
     public void openLog(View v){
 
+        while(SuperQueue.hasItems()){
+
+            System.out.println("X: " + SuperQueue.dequeue());
+            System.out.println("Y: " + SuperQueue.dequeue());
+            System.out.println("Z: " + SuperQueue.dequeue());
+            System.out.println("");
+
+        }
         Intent intent = new Intent(this, LogActvitiy.class);
         startActivity(intent);
     }
@@ -97,6 +124,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
             float x = sensorEvent.values[0];
             float y = sensorEvent.values[1];
             float z = sensorEvent.values[2];
+
 
             long curTime = System.currentTimeMillis();
 
@@ -115,24 +143,27 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
                 previousY = last_y;
                 previousZ = last_z;
 
-                if(Math.abs(x - previousX) > .3){
+
+
+
+
+                if (Math.abs(x - previousX) > .3) {
 
                     last_x = x;
 
                 }
 
-                if(Math.abs(y - previousY) > .3){
+                if (Math.abs(y - previousY) > .3) {
 
                     last_y = y;
 
                 }
 
-                if(Math.abs(z - previousZ) > .3){
+                if (Math.abs(z - previousZ) > .3) {
 
                     last_z = z;
 
                 }
-
 
 
             }
@@ -143,21 +174,27 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
             TextView buttonValue = (TextView) findViewById(R.id.button);
 
 
-            if(buttonValue.getText().toString().equals("Stop")) {
+            if (buttonValue.getText().toString().equals("Stop")) {
 
                 TextView view = (TextView) findViewById(R.id.textboxthing);
                 view.setText("X Axis: " + df.format(last_x) + "");
+                SuperQueue.enqueue(last_x);
+
 
                 TextView view2 = (TextView) findViewById(R.id.textboxthing2);
                 view2.setText("Y Axis: " + df.format(last_y) + "");
+                SuperQueue.enqueue(last_y);
+
 
                 TextView view3 = (TextView) findViewById(R.id.textboxthing3);
                 view3.setText("Z Axis: " + df.format(last_z) + "");
+                SuperQueue.enqueue(last_z);
+
+
 
             }
+
         }
-
-
     }
 
 
