@@ -4,7 +4,10 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.content.Intent;
 
 
 public class LogActvitiy extends ActionBarActivity {
@@ -15,11 +18,18 @@ public class LogActvitiy extends ActionBarActivity {
         setContentView(R.layout.activity_log_actvitiy);
 
         populateLog();
+
     }
 
     public void populateLog(){
 
-        TextView view = (TextView) findViewById(R.id.text);
+        EditText edit = (EditText) findViewById(R.id.editText);
+
+        Intent intent = getIntent();
+        String data = intent.getExtras().getString("data");
+
+
+        edit.setText(data);
 
     }
 

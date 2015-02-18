@@ -104,15 +104,27 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 
     public void openLog(View v){
 
+        String queueToString = "";
+
         while(SuperQueue.hasItems()){
 
-            System.out.println("X: " + SuperQueue.dequeue());
-            System.out.println("Y: " + SuperQueue.dequeue());
-            System.out.println("Z: " + SuperQueue.dequeue());
-            System.out.println("");
+            float xValue = SuperQueue.dequeue();
+            queueToString += "X: " + xValue + "\n";
+
+            float yValue = SuperQueue.dequeue();
+            queueToString += "Y: " + yValue + "\n";
+
+            float zValue = SuperQueue.dequeue();
+            queueToString += "Z: " + zValue + "\n";
+
 
         }
+
+        //System.out.println(queueToString);
+
+
         Intent intent = new Intent(this, LogActvitiy.class);
+        intent.putExtra("data", queueToString);
         startActivity(intent);
     }
 
