@@ -1,6 +1,7 @@
 package com.example.galuwa.sensorreader;
 
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -11,11 +12,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.content.Intent;
 
 import java.text.DecimalFormat;
-import java.util.LinkedList;
-import java.util.Queue;
 
 
 public class MainActivity extends ActionBarActivity implements SensorEventListener {
@@ -33,13 +31,13 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
     String Change2 = "im starting to hate myself.git";
 
     long lastUpdate = 0;
-    float last_x = 0;
-    float last_y = 0;
-    float last_z = 0;
+    float lastAccel_x = 0;
+    float lastAccel_y = 0;
+    float lastAccel_z = 0;
 
-    float previousX = 0;
-    float previousY = 0;
-    float previousZ = 0;
+    float secondLastX = 0;
+    float secondLastY = 0;
+    float secondLastZ = 0;
 
     //This is test stuff for the Queue
 
@@ -133,9 +131,9 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         Sensor mySensor = sensorEvent.sensor;
 
         if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            float x = sensorEvent.values[0];
-            float y = sensorEvent.values[1];
-            float z = sensorEvent.values[2];
+            float accel_x = sensorEvent.values[0];
+            float accel_y = sensorEvent.values[1];
+            float accel_z = sensorEvent.values[2];
 
 
             long curTime = System.currentTimeMillis();
@@ -144,36 +142,36 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
                 long diffTime = (curTime - lastUpdate);
                 lastUpdate = curTime;
 
-                float speed = Math.abs(x + y + z - last_x - last_y - last_z) / diffTime * 10000;
+                float speed = Math.abs(accel_x + accel_y + accel_z - lastAccel_x - lastAccel_y - lastAccel_z) / diffTime * 10000;
 
                 if (speed > SHAKE_THRESHOLD) {
 
                 }
 
 
-                previousX = last_x;
-                previousY = last_y;
-                previousZ = last_z;
+                secondLastX = lastAccel_x;
+                secondLastY = lastAccel_y;
+                secondLastZ = lastAccel_z;
 
 
 
 
 
-                if (Math.abs(x - previousX) > .3) {
+                if (Math.abs(accel_x - secondLastX) > .3) {
 
-                    last_x = x;
-
-                }
-
-                if (Math.abs(y - previousY) > .3) {
-
-                    last_y = y;
+                    lastAccel_x = accel_x;
 
                 }
 
-                if (Math.abs(z - previousZ) > .3) {
+                if (Math.abs(accel_y - secondLastY) > .3) {
 
-                    last_z = z;
+                    lastAccel_y = accel_y;
+
+                }
+
+                if (Math.abs(accel_z - secondLastZ) > .3) {
+
+                    lastAccel_z = accel_z;
 
                 }
 
@@ -189,22 +187,23 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
             if (buttonValue.getText().toString().equals("Stop")) {
 
                 TextView view = (TextView) findViewById(R.id.textboxthing);
-                view.setText("X Axis: " + df.format(last_x) + "");
-                SuperQueue.enqueue(last_x);
+                view.setText("X Axis: " + df.format(lastAccel_x) + "");
+                SuperQueue.enqueue(lastAccel_x);
 
 
                 TextView view2 = (TextView) findViewById(R.id.textboxthing2);
-                view2.setText("Y Axis: " + df.format(last_y) + "");
-                SuperQueue.enqueue(last_y);
+                view2.setText("Y Axis: " + df.format(lastAccel_y) + "");
+                SuperQueue.enqueue(lastAccel_y);
 
 
                 TextView view3 = (TextView) findViewById(R.id.textboxthing3);
-                view3.setText("Z Axis: " + df.format(last_z) + "");
-                SuperQueue.enqueue(last_z);
+                view3.setText("Z Axis: " + df.format(lastAccel_z) + "");
+                SuperQueue.enqueue(lastAccel_z);
 
 
 
             }
+        } else if (mySensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
 
         }
     }
