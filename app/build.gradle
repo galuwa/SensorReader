@@ -25,4 +25,5 @@ dependencies {
     compile 'com.android.support:support-v4:21.0.3'
     compile files('libs/jmathplot.jar')
     compile files('libs/achartengine-1.1.0.jar')
+    compile 'com.jjoe64:graphview:4.0.0'
 }

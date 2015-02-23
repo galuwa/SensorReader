@@ -88,8 +88,10 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         TextView view = (TextView) findViewById(R.id.button);
 
         TextView view2 = (TextView) findViewById(R.id.button2);
+        TextView view3 = (TextView) findViewById(R.id.button3);
         //view2.setEnabled(true);
         view2.setVisibility(View.VISIBLE);
+        view3.setVisibility(View.VISIBLE);
 
         if(view.getText().toString().equals("Start")) {
             view.setText("Stop");
@@ -129,6 +131,13 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         Intent intent = new Intent(this, LogActvitiy.class);
         intent.putExtra("data", queueToString);
         startActivity(intent);
+    }
+
+
+    public void openGraph(View v){
+
+        Intent intent2 = new Intent(this, Graphs.class);
+        startActivity(intent2);
     }
 
 

@@ -24,6 +24,10 @@
             android:name=".LogActvitiy"
             android:label="@string/title_activity_log_actvitiy" >
         </activity>
+        <activity
+            android:name=".Graphs"
+            android:label="@string/title_activity_graphs" >
+        </activity>
     </application>
 
 </manifest>

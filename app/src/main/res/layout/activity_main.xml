@@ -71,8 +71,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Graph"
+        android:onClick="openGraph"
         android:id="@+id/button3"
         android:layout_below="@+id/button2"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:visibility="invisible" />
 
 </RelativeLayout>
