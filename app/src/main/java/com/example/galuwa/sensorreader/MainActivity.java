@@ -12,8 +12,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-
 import java.text.DecimalFormat;
+
 
 
 public class MainActivity extends ActionBarActivity implements SensorEventListener {
@@ -87,6 +87,10 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 
         TextView view = (TextView) findViewById(R.id.button);
 
+        TextView view2 = (TextView) findViewById(R.id.button2);
+        //view2.setEnabled(true);
+        view2.setVisibility(View.VISIBLE);
+
         if(view.getText().toString().equals("Start")) {
             view.setText("Stop");
             SuperQueue = new GenQueue<Float>();
@@ -121,6 +125,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         //System.out.println(queueToString);
 
 
+
         Intent intent = new Intent(this, LogActvitiy.class);
         intent.putExtra("data", queueToString);
         startActivity(intent);
@@ -152,9 +157,6 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
                 secondLastX = lastAccel_x;
                 secondLastY = lastAccel_y;
                 secondLastZ = lastAccel_z;
-
-
-
 
 
                 if (Math.abs(accel_x - secondLastX) > .3) {
