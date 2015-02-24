@@ -11,6 +11,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Spinner;
 import android.widget.TextView;
 import java.text.DecimalFormat;
 
@@ -52,7 +53,6 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         senSensorManager.registerListener(this,senAccelerometer,SensorManager.SENSOR_DELAY_NORMAL);
 
-
     }
 
 
@@ -87,11 +87,15 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 
         TextView view = (TextView) findViewById(R.id.button);
 
-        TextView view2 = (TextView) findViewById(R.id.button2);
+        //TextView view2 = (TextView) findViewById(R.id.button2);
         TextView view3 = (TextView) findViewById(R.id.button3);
+        TextView view4 = (TextView) findViewById(R.id.button4);
+        TextView view5 = (TextView) findViewById(R.id.button5);
         //view2.setEnabled(true);
-        view2.setVisibility(View.VISIBLE);
+        //view2.setVisibility(View.VISIBLE);
         view3.setVisibility(View.VISIBLE);
+        view4.setVisibility(View.VISIBLE);
+        view5.setVisibility(View.VISIBLE);
 
         if(view.getText().toString().equals("Start")) {
             view.setText("Stop");
@@ -134,7 +138,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
     }
 
 
-    public void openGraph(View v){
+    public void openGraphX(View v){
 
         String queueToString = "";
 
@@ -144,6 +148,65 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 
             float xValue = SuperQueue.dequeue();
             queueToString += xValue + "\n";
+
+            SuperQueue.dequeue();
+            SuperQueue.dequeue();
+            //queueToString += yValue + "\n";
+
+            //float zValue = SuperQueue.dequeue();
+            //queueToString += zValue + "\n";
+
+
+        }
+
+        Intent intent2 = new Intent(this, Graphs.class);
+        intent2.putExtra("data", queueToString);
+        startActivity(intent2);
+    }
+
+    public void openGraphY(View v){
+
+        String queueToString = "";
+
+        while(SuperQueue.hasItems()){
+
+            //Test X graph building
+
+            SuperQueue.dequeue();
+
+            float YValue = SuperQueue.dequeue();
+            queueToString += YValue + "\n";
+
+            SuperQueue.dequeue();
+
+
+            //float yValue = SuperQueue.dequeue();
+            //queueToString += yValue + "\n";
+
+            //float zValue = SuperQueue.dequeue();
+            //queueToString += zValue + "\n";
+
+
+        }
+
+        Intent intent2 = new Intent(this, Graphs.class);
+        intent2.putExtra("data", queueToString);
+        startActivity(intent2);
+    }
+
+    public void openGraphZ(View v){
+
+        String queueToString = "";
+
+        while(SuperQueue.hasItems()){
+
+            //Test X graph building
+
+            SuperQueue.dequeue();
+            SuperQueue.dequeue();
+
+            float zValue = SuperQueue.dequeue();
+            queueToString += zValue + "\n";
 
             //float yValue = SuperQueue.dequeue();
             //queueToString += yValue + "\n";
