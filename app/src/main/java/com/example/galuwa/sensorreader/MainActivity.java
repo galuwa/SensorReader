@@ -136,7 +136,26 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 
     public void openGraph(View v){
 
+        String queueToString = "";
+
+        while(SuperQueue.hasItems()){
+
+            //Test X graph building
+
+            float xValue = SuperQueue.dequeue();
+            queueToString += xValue + "\n";
+
+            //float yValue = SuperQueue.dequeue();
+            //queueToString += yValue + "\n";
+
+            //float zValue = SuperQueue.dequeue();
+            //queueToString += zValue + "\n";
+
+
+        }
+
         Intent intent2 = new Intent(this, Graphs.class);
+        intent2.putExtra("data", queueToString);
         startActivity(intent2);
     }
 
