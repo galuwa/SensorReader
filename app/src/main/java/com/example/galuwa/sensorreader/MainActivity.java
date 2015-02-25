@@ -11,8 +11,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Spinner;
 import android.widget.TextView;
+
 import java.text.DecimalFormat;
 
 
@@ -20,29 +20,31 @@ import java.text.DecimalFormat;
 public class MainActivity extends ActionBarActivity implements SensorEventListener {
 
 
-
     public GenQueue<Float> SuperQueue;
 
     public final static String EXTRA_MESSAGE = "";
-    public final static int SHAKE_THRESHOLD = 1000;
+    public final static int SHAKE_THRESHOLD = 100;
+    public final static int TIME_THRESHOLD = 100;
 
     private SensorManager senSensorManager;
+    private SensorEventListener SenListener;
     private Sensor senAccelerometer;
+    private Sensor senGravity;
 
     String Change2 = "im starting to hate myself.git";
 
     long lastUpdate = 0;
+
     float lastAccel_x = 0;
     float lastAccel_y = 0;
     float lastAccel_z = 0;
 
-    float secondLastX = 0;
-    float secondLastY = 0;
-    float secondLastZ = 0;
+    float gravity_x = 0;
+    float gravity_y = 0;
+    float gravity_z = 0;
+
 
     //This is test stuff for the Queue
-
-
 
 
     @Override
@@ -51,8 +53,9 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         setContentView(R.layout.activity_main);
         senSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        senSensorManager.registerListener(this,senAccelerometer,SensorManager.SENSOR_DELAY_NORMAL);
-
+        senGravity = senSensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
+        senSensorManager.registerListener(this, senAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+        senSensorManager.registerListener(this, senGravity, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
 
@@ -84,7 +87,6 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
     public void buttonPress(View v) {
 
 
-
         TextView view = (TextView) findViewById(R.id.button);
 
         //TextView view2 = (TextView) findViewById(R.id.button2);
@@ -97,24 +99,20 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         view4.setVisibility(View.VISIBLE);
         view5.setVisibility(View.VISIBLE);
 
-        if(view.getText().toString().equals("Start")) {
+        if (view.getText().toString().equals("Start")) {
             view.setText("Stop");
             SuperQueue = new GenQueue<Float>();
-        }
-
-        else if(view.getText().toString().equals("Stop"))
+        } else if (view.getText().toString().equals("Stop"))
             view.setText("Start");
-
-
 
 
     }
 
-    public void openLog(View v){
+    public void openLog(View v) {
 
         String queueToString = "";
 
-        while(SuperQueue.hasItems()){
+        while (SuperQueue.hasItems()) {
 
             float xValue = SuperQueue.dequeue();
             queueToString += "X: " + xValue + "\n";
@@ -131,18 +129,17 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         //System.out.println(queueToString);
 
 
-
         Intent intent = new Intent(this, LogActvitiy.class);
         intent.putExtra("data", queueToString);
         startActivity(intent);
     }
 
 
-    public void openGraphX(View v){
+    public void openGraphX(View v) {
 
         String queueToString = "";
 
-        while(SuperQueue.hasItems()){
+        while (SuperQueue.hasItems()) {
 
             //Test X graph building
 
@@ -164,11 +161,11 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         startActivity(intent2);
     }
 
-    public void openGraphY(View v){
+    public void openGraphY(View v) {
 
         String queueToString = "";
 
-        while(SuperQueue.hasItems()){
+        while (SuperQueue.hasItems()) {
 
             //Test X graph building
 
@@ -194,11 +191,11 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         startActivity(intent2);
     }
 
-    public void openGraphZ(View v){
+    public void openGraphZ(View v) {
 
         String queueToString = "";
 
-        while(SuperQueue.hasItems()){
+        while (SuperQueue.hasItems()) {
 
             //Test X graph building
 
@@ -224,89 +221,79 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 
 
     public void onSensorChanged(SensorEvent sensorEvent) {
+
+        // Holds the identity of a sensor
         Sensor mySensor = sensorEvent.sensor;
 
-        if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            float accel_x = sensorEvent.values[0];
-            float accel_y = sensorEvent.values[1];
-            float accel_z = sensorEvent.values[2];
+        // Gets Text value of button that initiates measuring values to check whether or not data should be aggregated
+        TextView buttonValue = (TextView) findViewById(R.id.button);
 
+        // Checks whether STOP is on and if data should be observed
+        if((buttonValue.getText().toString().equals("Stop"))) {
+            // Checks Sensor Types and does corresponding manipulations on sensor data
+            if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
 
-            long curTime = System.currentTimeMillis();
+                // gets current time in milliseconds
+                long curTime = System.currentTimeMillis();
 
-            if ((curTime - lastUpdate) > 100) {
-                long diffTime = (curTime - lastUpdate);
-                lastUpdate = curTime;
+                if ((curTime - lastUpdate) > TIME_THRESHOLD) {
+                    long diffTime = (curTime - lastUpdate);
+                    lastUpdate = curTime;
 
-                float speed = Math.abs(accel_x + accel_y + accel_z - lastAccel_x - lastAccel_y - lastAccel_z) / diffTime * 10000;
+                    // Gets x,y, and z values from accelerometer and eliminates effect of gravity
+                    float accel_x = sensorEvent.values[0] - gravity_x;
+                    float accel_y = sensorEvent.values[1] - gravity_y;
+                    float accel_z = sensorEvent.values[2] - gravity_z;
 
-                if (speed > SHAKE_THRESHOLD) {
+                    // Finds magnitude of acceleration
+                    float speed = Math.abs(accel_x + accel_y + accel_z - lastAccel_x - lastAccel_y - lastAccel_z) / diffTime * 10000;
 
-                }
+                    if ((speed > SHAKE_THRESHOLD)) {
 
+                        // USED TO CALCULATE SHAKE_THRESHOLD
+                        lastAccel_x = accel_x;
+                        lastAccel_y = accel_y;
+                        lastAccel_z = accel_z;
 
-                secondLastX = lastAccel_x;
-                secondLastY = lastAccel_y;
-                secondLastZ = lastAccel_z;
+                        // Rounds accelerometer data
+                        DecimalFormat df = new DecimalFormat("#.##");
 
+                        // Displays Everything
+                        TextView view = (TextView) findViewById(R.id.textboxthing);
+                        view.setText("X Axis: " + df.format(lastAccel_x) + "");
+                        SuperQueue.enqueue(lastAccel_x);
 
-                if (Math.abs(accel_x - secondLastX) > .3) {
+                        TextView view2 = (TextView) findViewById(R.id.textboxthing2);
+                        view2.setText("Y Axis: " + df.format(lastAccel_y) + "");
+                        SuperQueue.enqueue(lastAccel_y);
 
-                    lastAccel_x = accel_x;
+                        TextView view3 = (TextView) findViewById(R.id.textboxthing3);
+                        view3.setText("Z Axis: " + df.format(lastAccel_z) + "");
+                        SuperQueue.enqueue(lastAccel_z);
 
-                }
+                    } // IF MAGNITUDE OF ACCELERATION IS LARGE ENOUGH END
+                } // IF TIME INTERVAL IS LARGE ENOUGH END
+            } // ACCELEROMETER END
+            else if (mySensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
+                String pickle = "choclate";
+            } // ROT VECTOR END
+            else {
 
-                if (Math.abs(accel_y - secondLastY) > .3) {
+                gravity_x = sensorEvent.values[0];
+                gravity_y = sensorEvent.values[1];
+                gravity_z = sensorEvent.values[2];
 
-                    lastAccel_y = accel_y;
+            } // GRAVITY END
+        } // IF "STOP" IS ON BUTTON END
+    } // FUNCTION , NO TOUCHIE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-                }
-
-                if (Math.abs(accel_z - secondLastZ) > .3) {
-
-                    lastAccel_z = accel_z;
-
-                }
-
-
-            }
-
-
-            DecimalFormat df = new DecimalFormat("#.##");
-
-            TextView buttonValue = (TextView) findViewById(R.id.button);
-
-
-            if (buttonValue.getText().toString().equals("Stop")) {
-
-                TextView view = (TextView) findViewById(R.id.textboxthing);
-                view.setText("X Axis: " + df.format(lastAccel_x) + "");
-                SuperQueue.enqueue(lastAccel_x);
-
-
-                TextView view2 = (TextView) findViewById(R.id.textboxthing2);
-                view2.setText("Y Axis: " + df.format(lastAccel_y) + "");
-                SuperQueue.enqueue(lastAccel_y);
-
-
-                TextView view3 = (TextView) findViewById(R.id.textboxthing3);
-                view3.setText("Z Axis: " + df.format(lastAccel_z) + "");
-                SuperQueue.enqueue(lastAccel_z);
-
-
-
-            }
-        } else if (mySensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
-
-        }
-    }
 
 
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
 
-
-
-
 }
+
+
+
