@@ -277,11 +277,12 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
             else if (mySensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
                 String pickle = "choclate";
             } // ROT VECTOR END
-            else {
+            else if (mySensor.getType() == Sensor.TYPE_GRAVITY) {
 
                 gravity_x = sensorEvent.values[0];
                 gravity_y = sensorEvent.values[1];
                 gravity_z = sensorEvent.values[2];
+                System.out.println(gravity_x);
 
             } // GRAVITY END
         } // IF "STOP" IS ON BUTTON END
