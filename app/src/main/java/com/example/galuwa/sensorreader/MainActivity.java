@@ -23,7 +23,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
     public GenQueue<Float> SuperQueue;
 
     public final static String EXTRA_MESSAGE = "";
-    public final static int SHAKE_THRESHOLD = 100;
+    public final static int SHAKE_THRESHOLD = 50;
     public final static int TIME_THRESHOLD = 100;
 
     private SensorManager senSensorManager;
@@ -31,7 +31,6 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
     private Sensor senAccelerometer;
     private Sensor senGravity;
 
-    String Change2 = "im starting to hate myself.git";
 
     long lastUpdate = 0;
 
@@ -52,10 +51,11 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         senSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        senGravity = senSensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
+        //senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+        //senGravity = senSensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
         senSensorManager.registerListener(this, senAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-        senSensorManager.registerListener(this, senGravity, SensorManager.SENSOR_DELAY_NORMAL);
+        //senSensorManager.registerListener(this, senGravity, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
 
@@ -230,8 +230,12 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 
         // Checks whether STOP is on and if data should be observed
         if((buttonValue.getText().toString().equals("Stop"))) {
+
+            System.out.println("Sensor Type is: " + mySensor.getType());
+
             // Checks Sensor Types and does corresponding manipulations on sensor data
-            if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            //if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            if (mySensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
 
                 // gets current time in milliseconds
                 long curTime = System.currentTimeMillis();
@@ -274,19 +278,25 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
                     } // IF MAGNITUDE OF ACCELERATION IS LARGE ENOUGH END
                 } // IF TIME INTERVAL IS LARGE ENOUGH END
             } // ACCELEROMETER END
+
             else if (mySensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
                 String pickle = "choclate";
+                System.out.println(pickle);
             } // ROT VECTOR END
             else if (mySensor.getType() == Sensor.TYPE_GRAVITY) {
 
                 gravity_x = sensorEvent.values[0];
                 gravity_y = sensorEvent.values[1];
                 gravity_z = sensorEvent.values[2];
-                System.out.println(gravity_x);
+                System.out.println("Gravity X = "+ gravity_x);
 
             } // GRAVITY END
+
+
         } // IF "STOP" IS ON BUTTON END
-    } // FUNCTION , NO TOUCHIE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+    } // FUNCTION , NO TOUCHIE (Unless you want the program to not work -> Then go ahead)
 
 
 
