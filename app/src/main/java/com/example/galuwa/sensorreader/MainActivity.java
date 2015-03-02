@@ -23,12 +23,11 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
     public GenQueue<Float> SuperQueue;
 
     public final static String EXTRA_MESSAGE = "";
-    public final static int SHAKE_THRESHOLD = 50;
+    public final static int SHAKE_THRESHOLD = 0;
     public final static int TIME_THRESHOLD = 100;
 
     private SensorManager senSensorManager;
     private SensorEventListener SenListener;
-    private SensorEventListener GravListener;
     private Sensor senAccelerometer;
     private Sensor senGravity;
 
@@ -52,11 +51,11 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         senSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        //senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
-        senGravity = senSensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
-        senSensorManager.registerListener(SenListener, senAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-        senSensorManager.registerListener(GravListener, senGravity, SensorManager.SENSOR_DELAY_NORMAL);
+        //senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+        //senGravity = senSensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
+        senSensorManager.registerListener(this, senAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+        //senSensorManager.registerListener(this, senGravity, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
 
@@ -236,7 +235,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 
             // Checks Sensor Types and does corresponding manipulations on sensor data
             //if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            if (mySensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
 
                 // gets current time in milliseconds
                 long curTime = System.currentTimeMillis();
@@ -290,6 +289,8 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
                 gravity_y = sensorEvent.values[1];
                 gravity_z = sensorEvent.values[2];
                 System.out.println("Gravity X = "+ gravity_x);
+                System.out.println("Gravity Y = "+ gravity_y);
+                System.out.println("Gravity Z = "+ gravity_z);
 
             } // GRAVITY END
 
